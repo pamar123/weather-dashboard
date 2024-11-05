@@ -1,3 +1,4 @@
+// server/src/server.ts
 import express from 'express';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
@@ -16,11 +17,17 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files
+// Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-// Routes
-app.use(routes);
+// API Routes
+app.use('/api', routes);
 
-// Start the server
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// All other GET requests not handled before will return our React app
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
