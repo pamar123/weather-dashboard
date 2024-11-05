@@ -32,16 +32,24 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Routes
-app.use(routes);
+// Serve static files - moved before routes
+app.use(express.static(path.join(__dirname, '../../client/dist'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
 
-// Serve static files in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../../client/dist')));
-  app.get('*', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-  });
-}
+// API Routes
+app.use('/api', routes);
+
+// All other routes serve index.html
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
