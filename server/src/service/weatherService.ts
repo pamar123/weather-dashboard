@@ -42,7 +42,6 @@ class WeatherService {
     const response = await fetch(weatherUrl);
     const data = await response.json();
 
-    // Process current weather and next 5 days
     return this.processWeatherData(data, cityName);
   }
 
@@ -50,7 +49,7 @@ class WeatherService {
     const processedData: WeatherData[] = [];
     const today = new Date();
     
-    // Current weather (first entry)
+    // Current weather
     processedData.push({
       city: cityName,
       date: today.toLocaleDateString(),
@@ -63,7 +62,7 @@ class WeatherService {
 
     // Next 5 days
     for (let i = 1; i <= 5; i++) {
-      const forecastData = data.list[i * 8 - 1]; // Get data for each day
+      const forecastData = data.list[i * 8 - 1];
       const forecastDate = new Date(today);
       forecastDate.setDate(today.getDate() + i);
 

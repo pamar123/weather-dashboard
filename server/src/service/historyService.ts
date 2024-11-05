@@ -1,4 +1,3 @@
-// src/services/historyService.ts
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -16,7 +15,7 @@ class HistoryService {
   private filePath: string;
 
   constructor() {
-    this.filePath = path.join(__dirname, '..', 'searchHistory.json');
+    this.filePath = path.join(__dirname, '../searchHistory.json');
   }
 
   async getCities(): Promise<City[]> {
@@ -30,24 +29,20 @@ class HistoryService {
 
   async addCity(cityName: string): Promise<City> {
     const cities = await this.getCities();
-    const existingCity = cities.find(
-      city => city.name.toLowerCase() === cityName.toLowerCase()
-    );
     
-    // Return existing city if found
-    if (existingCity) {
-      return existingCity;
+    // Check if city already exists
+    if (!cities.some(city => city.name.toLowerCase() === cityName.toLowerCase())) {
+      const newCity = {
+        id: uuidv4(),
+        name: cityName
+      };
+      
+      cities.push(newCity);
+      await fs.writeFile(this.filePath, JSON.stringify({ cities }, null, 2));
+      return newCity;
     }
-
-    // Create new city if not found
-    const newCity = {
-      id: uuidv4(),
-      name: cityName
-    };
     
-    cities.push(newCity);
-    await fs.writeFile(this.filePath, JSON.stringify({ cities }, null, 2));
-    return newCity;
+    return cities.find(city => city.name.toLowerCase() === cityName.toLowerCase())!;
   }
 
   async deleteCity(id: string): Promise<void> {
