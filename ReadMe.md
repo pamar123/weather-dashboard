@@ -64,16 +64,8 @@ npm run dev
 4. Click on cities in the search history to quickly view their weather again
 5. Use the delete button to remove cities from the search history
 
-## Screenshots
-[Add screenshots of your working application here]
-
 ## Deployment
 The application is deployed on Render and can be accessed at: [Add deployed URL here]
 
 ## License
 ISC
-
-## Questions
-For any questions about the project, feel free to visit my GitHub profile or contact me via email:
-- GitHub: [Your GitHub Profile]
-- Email: [Your Email]
